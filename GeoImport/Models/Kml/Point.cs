@@ -7,7 +7,7 @@ namespace GeoImport.Models.Kml;
 [Serializable]
 [DesignerCategory("code")]
 [XmlType(AnonymousType = true, Namespace = "http://www.opengis.net/kml/2.2")]
-public class LinearRing
+public class Point
 {
     /// <remarks/>
     [XmlElement("coordinates")]

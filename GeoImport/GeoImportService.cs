@@ -42,8 +42,9 @@ public class GeoImportService
 
         using var reader = XmlReader.Create(fileName, settings);
         var serializer = new XmlSerializer(type);
+        var obj = serializer.Deserialize(reader);
         
         var mapper = new KmlMapper();
-        return mapper.ConvertToJson(serializer.Deserialize(reader));
+        return mapper.ConvertToJson(obj);
     }
 }

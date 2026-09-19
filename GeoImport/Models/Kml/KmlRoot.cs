@@ -12,6 +12,8 @@ namespace GeoImport.Models.Kml;
 public class Kml
 {
     /// <remarks/>
-    [XmlElement("Document")]
-    public Document Document { get; set; }
+    [XmlElement(typeof(Document), ElementName = "Document")]
+    [XmlElement(typeof(Folder), ElementName = "Folder")]
+    [XmlElement(typeof(Placemark), ElementName = "Placemark")]
+    public object Feature { get; set; }
 }

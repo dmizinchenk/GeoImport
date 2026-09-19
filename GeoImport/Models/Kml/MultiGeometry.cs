@@ -10,6 +10,9 @@ namespace GeoImport.Models.Kml;
 public class MultiGeometry
 {
     /// <remarks/>
-    [XmlElement("Polygon")]
-    public Polygon[] Polygon { get; set; }
+    [XmlElement(typeof(Polygon), ElementName = "Polygon")]
+    [XmlElement(typeof(LineString[]), ElementName = "LineString")]
+    [XmlElement(typeof(LinearRing[]), ElementName = "LinearRing")]
+    [XmlElement(typeof(Point[]), ElementName = "Point")]
+    public object Geometries { get; set; }
 }

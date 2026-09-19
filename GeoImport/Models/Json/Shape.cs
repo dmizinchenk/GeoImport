@@ -1,5 +1,4 @@
 using System.Text.Json.Serialization;
-using NetTopologySuite.Geometries;
 
 namespace GeoImport.Models.Json;
 

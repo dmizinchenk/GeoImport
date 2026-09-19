@@ -14,8 +14,9 @@ public class Document
     public Schema? Schema { get; set; }
 
     /// <remarks/>
-    [XmlElement("Folder")]
-    public Folder? Folder { get; set; }
+    [XmlElement(typeof(Folder), ElementName = "Folder")]
+    [XmlElement(typeof(Placemark[]), ElementName = "Placemark")]
+    public object Feature { get; set; }
 
     /// <remarks/>
     [XmlAttribute("id")]

@@ -15,5 +15,5 @@ public class Folder
 
     /// <remarks/>
     [XmlElement("Placemark")]
-    public Placemark Placemark { get; set; }
+    public object[] Placemark { get; set; }
 }

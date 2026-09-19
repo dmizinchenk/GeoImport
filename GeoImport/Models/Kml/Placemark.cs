@@ -22,8 +22,12 @@ public class Placemark
     public ExtendedData ExtendedData { get; set; }
 
     /// <remarks/>
-    [XmlElement("MultiGeometry")]
-    public MultiGeometry MultiGeometry { get; set; }
+    [XmlElement(typeof(MultiGeometry), ElementName = "MultiGeometry")]
+    [XmlElement(typeof(Polygon), ElementName = "Polygon")]
+    [XmlElement(typeof(LineString), ElementName = "LineString")]
+    [XmlElement(typeof(LinearRing), ElementName = "LinearRing")]
+    [XmlElement(typeof(Point), ElementName = "Point")]
+    public object Geometry { get; set; }
     /// <remarks/>
     [XmlElement("description")]
     public Description Description { get; set; }
