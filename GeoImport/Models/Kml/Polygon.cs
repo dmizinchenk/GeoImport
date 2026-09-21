@@ -14,5 +14,5 @@ public class Polygon
     public OuterBoundaryIs OuterBoundaryIs { get; set; }
     /// <remarks/>
     [XmlElement("innerBoundaryIs")]
-    public InnerBoundaryIs[] InnerBoundaryIs { get; set; }
+    public InnerBoundaryIs InnerBoundaryIs { get; set; }
 }

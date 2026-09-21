@@ -19,9 +19,9 @@ public class JsonRoot
     ];
 
     /// <remarks/>
-    public List<Geometries> Geometries { get; set; } = [];
+    public List<Geometries> Geometries { get; init; } = [];
 
     /// <remarks/>
-    public List<object[]> Records { get; set; } = [];
+    public List<object[]> Records { get; init; } = [];
 }
 

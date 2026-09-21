@@ -15,5 +15,5 @@ public class Kml
     [XmlElement(typeof(Document), ElementName = "Document")]
     [XmlElement(typeof(Folder), ElementName = "Folder")]
     [XmlElement(typeof(Placemark), ElementName = "Placemark")]
-    public object Feature { get; set; }
+    public object[] Feature { get; set; }
 }

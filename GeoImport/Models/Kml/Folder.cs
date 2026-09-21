@@ -14,6 +14,6 @@ public class Folder
     public string Name { get; set; }
 
     /// <remarks/>
-    [XmlElement("Placemark")]
-    public object[] Placemark { get; set; }
+    [XmlElement(typeof(Placemark), ElementName = "Placemark")]
+    public object[] Feature { get; set; } = [];
 }

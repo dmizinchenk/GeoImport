@@ -15,8 +15,8 @@ public class Document
 
     /// <remarks/>
     [XmlElement(typeof(Folder), ElementName = "Folder")]
-    [XmlElement(typeof(Placemark[]), ElementName = "Placemark")]
-    public object Feature { get; set; }
+    [XmlElement(typeof(Placemark), ElementName = "Placemark")]
+    public object[] Feature { get; set; } = [];
 
     /// <remarks/>
     [XmlAttribute("id")]

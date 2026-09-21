@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Text.Json;
 using GeoImport.Models.Json;
 using GeoImport.Models.Kml;
@@ -8,7 +7,128 @@ namespace GeoImport;
 
 public class KmlMapper : IMapper
 {
-    public string ConvertToJson(object? obj) => throw new NotImplementedException();
+    public string ConvertToJson(object? obj)
+    {
+        var jsonModel = new JsonRoot();
+        if (obj == null)
+        {
+            return JsonSerializer.Serialize(jsonModel);;
+        }
+        var model = obj as Kml;
+        var placeMarks = GetPlacemark(model?.Feature!);
+        
+        // if (placeMarks == null || placeMarks.Length == 0)
+        // {
+        //     return JsonSerializer.Serialize(jsonModel);;
+        // }
+        //
+        // foreach (var placemark in placeMarks)
+        // {
+        //     var record = new object[5];
+        //     record[0] = placemark.Name;
+        //     record[1] = placemark.Description?.Value;
+        //     record[2] = placemark.Style.LineStyle?.Width;
+        //     record[3] = placemark.Style.PolyStyle?.Color;
+        //     record[4] = placemark.Style.LineStyle?.Color;
+        //
+        //     var coordinates = GetCoordinates(placemark.Geometry, out var geometryType);
+        //     double area = 0;
+        //     double perimeter = 0;
+        //     if (geometryType is Point)
+        //     {
+        //         (area, perimeter) = CalcParams(coordinates);
+        //     }
+        //     var geometry = new Geometries
+        //     {
+        //         Area = area,
+        //         Perimeter = perimeter,
+        //         ShapeObj = new Shape
+        //         {
+        //             Type = geometryType.Name,
+        //             Coordinates = null
+        //         },
+        //         ShapeType = geometryType.Name,
+        //         Style = new Style
+        //         {
+        //             Color = placemark?.Style?.LineStyle?.Color,
+        //             Width = int.TryParse(placemark?.Style?.LineStyle?.Width, out var w) ? w : 0,
+        //         },
+        //     };
+        //     
+        //     jsonModel.Geometries.Add(geometry);
+        //     jsonModel.Records.Add(record);
+        // }
+        
+        // jsonModel.CountRecords = placeMarks.Length;
+        jsonModel.Area = jsonModel.Geometries.Sum(g => g.Area);
+        return JsonSerializer.Serialize(jsonModel);
+    }
+
+    private Placemark[]? GetPlacemark(object[] feature) => 
+        feature switch
+        {
+            null => null,
+            var arr => arr[0] switch
+            {
+                Document document => GetPlacemark(document.Feature),
+                Folder folder => GetPlacemark(folder.Feature),
+                Placemark => arr.Select(o => (Placemark)o).ToArray(),
+                _ => throw new ArgumentException()
+            }
+        };
+
+    private List<List<Coordinates>> GetCoordinates(object geometry, out Type geometryType)
+    {
+        List<List<Coordinates>> list;
+        switch (geometry)
+        {
+            case MultiGeometry multiGeometry:
+                list = GetCoordinates(multiGeometry.Geometries, out _);
+                geometryType = typeof(MultiGeometry);
+                return list;
+            case Polygon polygon:
+                var outer = GetCoordinates(polygon.OuterBoundaryIs?.LinearRing, out _);
+                var inner = GetCoordinates(polygon.InnerBoundaryIs?.LinearRing, out _);
+                geometryType = typeof(Polygon);
+                return [outer[0], inner[0]];
+            case LineString lineString:
+                geometryType = typeof(LineString);
+                return [[lineString.Coordinates]];
+            case LinearRing linearRing:
+                geometryType = typeof(LinearRing);
+                return [[linearRing.Coordinates]];
+            case Point point:
+                geometryType = typeof(Point);
+                return [[point.Coordinates]];
+            case Polygon[] polygons:
+                list = new List<List<Coordinates>>(polygons.Select(polygon => GetCoordinates(polygon, out _)[0]));
+                geometryType = typeof(Polygon);
+                return list;
+            case LineString[] lineStrings:
+                list = new List<List<Coordinates>>(lineStrings.Select(lineString => GetCoordinates(lineString, out _)[0]));
+                geometryType = typeof(LineString);
+                return list;
+            case LinearRing[] linearRings:
+                list = new List<List<Coordinates>>(linearRings.Select(linearRing => GetCoordinates(linearRing, out _)[0]));
+                geometryType = typeof(LinearRing);
+                return list;
+            case Point[] points:
+                list = new List<List<Coordinates>>(points.Select(point => GetCoordinates(point, out _)[0]));
+                geometryType = typeof(Point);
+                return list;
+            default:
+                throw new ArgumentException();
+        }
+    }
+
+    private (double area, double perimeter) CalcParams(List<List<Coordinates>> coordinates)
+    {
+        return (10, 10);
+        //TODO
+        foreach (var coordinate in coordinates)
+        {
+        }
+    }
     // {
     //     if (obj == null)
     //     {
