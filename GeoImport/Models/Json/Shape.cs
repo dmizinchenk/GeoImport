@@ -8,5 +8,5 @@ public class Shape
     public string Type { get; set; }
 
     [JsonPropertyName("coordinates")] 
-    public string Coordinates { get; set; }
+    public List<object> Coordinates { get; set; }
 }

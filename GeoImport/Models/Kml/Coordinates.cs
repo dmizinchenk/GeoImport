@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Globalization;
 using System.Text;
 using System.Xml.Serialization;
 
@@ -16,31 +17,12 @@ public class Coordinates
     public string Content {
         set
         {
-            data = value;
+            data = value.Trim();
         }
-        get
-        {
-            var v = Values;
-            if (v is null || v.Length == 0)
-            {
-                return null;
-            }
-            
-            var builder = new StringBuilder(data.Length + v.Length * 3);
-            
-            for (var i = 0; i < data.Length; i++)
-            {
-                builder.Append($"[{data[i]}]");
-                if (i != data.Length - 1)
-                {
-                    builder.Append(',');
-                }
-            }
-            return builder.ToString();
-        } 
+        get => data;
     }
     [XmlIgnore]
-    public string[] Values
+    public double[][] Values
     {
         get
         {
@@ -48,7 +30,16 @@ public class Coordinates
             {
                 return null;
             }
-            return data.Split([' ', '\n', '\t', '\r'], StringSplitOptions.RemoveEmptyEntries);
+            return data.Split([' ', '\n', '\t', '\r'], StringSplitOptions.RemoveEmptyEntries)
+                .Select<string, double[]>(e =>
+                {
+                    var arr = e.Split(',');
+                    return
+                        [
+                            double.Parse(arr[0], NumberStyles.Any, CultureInfo.InvariantCulture),
+                            double.Parse(arr[1], NumberStyles.Any, CultureInfo.InvariantCulture),
+                        ];
+                }).ToArray();
         }
     }
 }

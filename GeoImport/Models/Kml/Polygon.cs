@@ -7,7 +7,7 @@ namespace GeoImport.Models.Kml;
 [Serializable]
 [DesignerCategory("code")]
 [XmlType(AnonymousType = true, Namespace = "http://www.opengis.net/kml/2.2")]
-public class Polygon
+public class Polygon : ICoordinates
 {
     /// <remarks/>
     [XmlElement("outerBoundaryIs")]
@@ -15,4 +15,10 @@ public class Polygon
     /// <remarks/>
     [XmlElement("innerBoundaryIs")]
     public InnerBoundaryIs InnerBoundaryIs { get; set; }
+
+    public string GetCoordinateString() =>
+        $"[{OuterBoundaryIs.GetCoordinates()}{(InnerBoundaryIs == null ? "" : $",{InnerBoundaryIs.GetCoordinates()}")}]";
+
+    [XmlIgnore]
+    public List<object> GetCoordinates => InnerBoundaryIs == null ? [OuterBoundaryIs.Coordinates] : [OuterBoundaryIs.Coordinates, InnerBoundaryIs.Coordinates];
 }

@@ -12,4 +12,8 @@ public class OuterBoundaryIs
     /// <remarks/>
     [XmlElement("LinearRing")]
     public LinearRing LinearRing { get; set; }
+
+    [XmlIgnore] public List<object> Coordinates => LinearRing.GetCoordinates;
+
+    public string GetCoordinates() => LinearRing?.GetCoordinateString();
 }
