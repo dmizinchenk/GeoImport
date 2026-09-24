@@ -22,7 +22,7 @@ public class Coordinates
         get => data;
     }
     [XmlIgnore]
-    public double[][] Values
+    public decimal[][] Values
     {
         get
         {
@@ -31,13 +31,13 @@ public class Coordinates
                 return null;
             }
             return data.Split([' ', '\n', '\t', '\r'], StringSplitOptions.RemoveEmptyEntries)
-                .Select<string, double[]>(e =>
+                .Select<string, decimal[]>(e =>
                 {
                     var arr = e.Split(',');
                     return
                         [
-                            double.Parse(arr[0], NumberStyles.Any, CultureInfo.InvariantCulture),
-                            double.Parse(arr[1], NumberStyles.Any, CultureInfo.InvariantCulture),
+                            decimal.Parse(arr[0], NumberStyles.Any, CultureInfo.InvariantCulture),
+                            decimal.Parse(arr[1], NumberStyles.Any, CultureInfo.InvariantCulture),
                         ];
                 }).ToArray();
         }

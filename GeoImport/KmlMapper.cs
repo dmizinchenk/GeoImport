@@ -1,4 +1,5 @@
 using System.Text.Json;
+using GeoImport.Calc;
 using GeoImport.Models.Json;
 using GeoImport.Models.Kml;
 using Style = GeoImport.Models.Json.Style;
@@ -37,7 +38,8 @@ public class KmlMapper : IMapper
             double perimeter = 0;
             if (geometryType != typeof(Point))
             {
-                (area, perimeter) = CalcParams(coordinates);
+                var calculator = new GeodCalculator();
+                (area, perimeter) = calculator.Calculate(coordinates);
             }
             var geometry = new Geometries
             {
@@ -107,36 +109,10 @@ public class KmlMapper : IMapper
             case Point point:
                 geometryType = typeof(Point);
                 return [[point.Coordinates]];
-            case Polygon[] polygons:
-                list = new List<List<Coordinates>>(polygons.Select(polygon => GetCoordinates(polygon, out _)[0]));
-                geometryType = typeof(Polygon);
-                return list;
-            case LineString[] lineStrings:
-                list = new List<List<Coordinates>>(lineStrings.Select(lineString => GetCoordinates(lineString, out _)[0]));
-                geometryType = typeof(LineString);
-                return list;
-            case LinearRing[] linearRings:
-                list = new List<List<Coordinates>>(linearRings.Select(linearRing => GetCoordinates(linearRing, out _)[0]));
-                geometryType = typeof(LinearRing);
-                return list;
-            case Point[] points:
-                list = new List<List<Coordinates>>(points.Select(point => GetCoordinates(point, out _)[0]));
-                geometryType = typeof(Point);
-                return list;
             case object[] objects:
                 return GetCoordinates(objects[0], out geometryType);
             default:
                 throw new ArgumentException();
-        }
-    }
-
-    private (double area, double perimeter) CalcParams(List<List<Coordinates>> coordinates)
-    {
-        return (10, 10);
-        //TODO
-        foreach (var coordinate in coordinates)
-        {
-            
         }
     }
 }
